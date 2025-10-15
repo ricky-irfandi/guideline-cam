@@ -1,0 +1,34 @@
+name: guideline_cam
+description: A lightweight Flutter package that helps capture IDs, documents, or faces with a guided camera overlay.
+version: 0.0.1
+homepage: https://github.com/ricky-irfandi/guideline-cam
+repository: https://github.com/ricky-irfandi/guideline-cam
+issue_tracker: https://github.com/ricky-irfandi/guideline-cam/issues
+documentation: https://github.com/ricky-irfandi/guideline-cam#readme
+
+topics:
+  - camera
+  - guideline
+  - overlay
+  - capture
+  - document
+
+platforms:
+  android:
+  ios:
+
+environment:
+  sdk: ^3.3.0
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  camera: ^0.11.0+2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:

@@ -117,3 +117,9 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+.DS_Store
+
+# Example related
+example/.vscode/launch.json
+example/.metadata
+example/analysis_options.yaml
