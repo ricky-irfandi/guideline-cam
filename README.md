@@ -10,9 +10,9 @@ Supports **rectangles, rounded rectangles, circles, and ovals** for manual image
 |                                                                                  |                                                                  |                                                    |
 | -------------------------------------------------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------- |
 | **Basic Usage**                                                                  | **Custom Button**                                                | **Overlay Builder**                                |
-| ![Basic Usage](snapshot/basic.gif)                                               | ![Custom Button](snapshot/custom%20button.gif)                   | ![Overlay Builder](snapshot/overlay%20builder.gif) |
+| ![Basic Usage](https://raw.githubusercontent.com/ricky-irfandi/guideline-cam/main/snapshot/basic.gif)                                               | ![Custom Button](https://raw.githubusercontent.com/ricky-irfandi/guideline-cam/main/snapshot/custom%20button.gif)                   | ![Overlay Builder](https://raw.githubusercontent.com/ricky-irfandi/guideline-cam/main/snapshot/overlay%20builder.gif) |
 | **Built-in Instruction Builder**                                                 | **Multi & Nested Shape**                                         |                                                    |
-| ![Built-in Instruction Builder](snapshot/built%20in%20instruction%20builder.gif) | ![Multi & Nested Shape](snapshot/multi%20&%20nested%20shape.gif) |                                                    |
+| ![Built-in Instruction Builder](https://raw.githubusercontent.com/ricky-irfandi/guideline-cam/main/snapshot/built%20in%20instruction%20builder.gif) | ![Multi & Nested Shape](https://raw.githubusercontent.com/ricky-irfandi/guideline-cam/main/snapshot/multi%20&%20nested%20shape.gif) |                                                    |
 
 ---
 

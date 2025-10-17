@@ -1,3 +1,7 @@
+# 0.0.2
+
+-Fixed GIF image not displaying oon pub.dev by using absolute URLs.
+
 # 0.0.1
 
 - Initial release of the `guideline_cam` package.
