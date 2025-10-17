@@ -1,6 +1,6 @@
 # 📸 GuidelineCamBuilder
 
-A lightweight Flutter package that helps capture IDs, documents, or faces with a guided camera overlay.
+A lightweight Flutter package that helps build guideline camera overlay to capture IDs, documents, or faces.
 Supports **rectangles, rounded rectangles, circles, and ovals** for manual image capture.
 
 ---
