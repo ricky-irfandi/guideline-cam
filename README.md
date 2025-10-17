@@ -1,5 +1,11 @@
 # 📸 GuidelineCamBuilder
 
+[![pub package](https://img.shields.io/pub/v/guideline_cam.svg)](https://pub.dev/packages/guideline_cam)
+[![pub points](https://img.shields.io/pub/points/guideline_cam)](https://pub.dev/packages/guideline_cam/score)
+[![popularity](https://img.shields.io/pub/popularity/guideline_cam)](https://pub.dev/packages/guideline_cam/score)
+[![likes](https://img.shields.io/pub/likes/guideline_cam)](https://pub.dev/packages/guideline_cam/score)
+
+
 A lightweight Flutter package that helps build guideline camera overlay to capture IDs, documents, or faces.
 Supports **rectangles, rounded rectangles, circles, and ovals** for manual image capture.
 
@@ -569,6 +575,27 @@ MultiShapeOverlayConfig({
 | file       | XFile               | Captured image file.       |
 | capturedAt | DateTime            | Timestamp of capture.      |
 | lens       | CameraLensDirection | Lens used for the capture. |
+
+## 🤖 LLM Integration
+
+This package includes [`llms.txt`](https://github.com/ricky-irfandi/guideline-cam/blob/main/llms.txt) - comprehensive documentation for AI/LLM systems to understand the package structure, API, and usage patterns.
+
+### For AI/LLM Users
+
+Reference the [`llms.txt`](https://github.com/ricky-irfandi/guideline-cam/blob/main/llms.txt) file when working with AI assistants to get:
+
+- Complete API documentation and usage examples
+- Architecture overview and configuration guides
+- Best practices and troubleshooting tips
+
+
+### Example Prompts
+
+```
+"Using guideline_cam, help me create a camera interface for ID card capture"
+"Show me how to implement multi-shape overlays for document capture"
+"Help me troubleshoot camera initialization issues"
+```
 
 ## Contributing
 

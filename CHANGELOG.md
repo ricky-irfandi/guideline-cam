@@ -1,6 +1,6 @@
 # 0.0.2
-
--Fixed GIF image not displaying oon pub.dev by using absolute URLs.
+- Added `llms.txt`: comprehensive documentation for AI/LLM systems to understand package structure, API, and usage patterns.
+- Fixed GIF image not displaying on pub.dev by using absolute URLs.
 
 # 0.0.1
 

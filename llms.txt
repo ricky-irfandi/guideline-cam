@@ -1,0 +1,375 @@
+# guideline_cam - Flutter Camera Package with Overlay Guidelines
+
+## Package Overview
+- **Name**: guideline_cam
+- **Version**: 0.0.1
+- **Purpose**: Lightweight Flutter package for camera capture with customizable overlay shapes
+- **Core Value**: Guided camera interface for document/ID/face capture with visual guidelines
+- **Platforms**: Android, iOS
+- **Dependencies**: camera: ^0.11.0+2
+
+## Core Architecture
+
+### Main Components
+- `GuidelineCamBuilder` - Main widget combining camera preview + overlay
+- `GuidelineCamController` - Camera lifecycle, state management, capture operations
+- `GuidelineOverlayConfig` - Single/multi-shape overlay configuration
+- `ShapeConfig` - Individual shape definition with positioning
+- `MultiShapeOverlayConfig` - Complex multi-shape overlay support
+
+### Component Relationships
+```
+GuidelineCamBuilder
+├── GuidelineCamController (camera operations)
+├── GuidelineOverlayConfig (overlay definition)
+│   ├── Single shape: shape, aspectRatio, styling
+│   └── Multi-shape: List<ShapeConfig>
+└── Custom builders (flash, camera switch, overlay, instructions)
+```
+
+## Key Features
+
+### Overlay Shapes
+- `rect` - Plain rectangle (documents, forms)
+- `roundedRect` - Rounded corners (ID cards, credit cards) 
+- `circle` - Perfect circle (face capture, biometrics)
+- `oval` - Ellipse (passport photos, portraits)
+
+### Multi-Shape Support
+- Multiple shapes in single overlay
+- Nested child shapes with parent-child relationships
+- Unified masking across all shapes
+- Individual shape styling and positioning
+
+### Positioning Modes
+- `absolute` - Fixed pixel coordinates
+- `relative` - Percentage-based positioning (0.0-1.0)
+- `center` - Automatically centered within parent
+- `inset` - Margins from parent edges
+
+### Customization Options
+- Aspect ratio constraints
+- Frame colors, stroke width, border radius
+- Corner indicators, 3x3 grid overlay
+- Mask color and transparency
+- Custom button builders (flash, camera switch)
+- Complete overlay replacement via `overlayBuilder`
+
+### State Management
+- `initializing` - Camera setup
+- `ready` - Ready for capture
+- `capturing` - Image capture in progress
+- `error` - Error state
+
+## API Surface
+
+### GuidelineCamBuilder
+```dart
+GuidelineCamBuilder({
+  required GuidelineCamController controller,
+  GuidelineOverlayConfig guideline = const GuidelineOverlayConfig(),
+  bool showFlashToggle = true,
+  bool showCameraSwitch = true,
+  Widget Function(BuildContext, GuidelineState)? instructionBuilder,
+  Widget Function(BuildContext, FlashMode, VoidCallback)? flashButtonBuilder,
+  Widget Function(BuildContext, CameraLensDirection, VoidCallback)? cameraSwitchButtonBuilder,
+  Widget Function(BuildContext, GuidelineCamController)? overlayBuilder,
+  void Function(GuidelineCaptureResult)? onCapture,
+  void Function(Object, StackTrace)? onError,
+})
+```
+
+### GuidelineCamController
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `initialize()` | `Future<void>()` | Setup camera, discover devices |
+| `capture()` | `Future<XFile?>()` | Take photo, return file |
+| `switchCamera()` | `Future<void>()` | Toggle front/back camera |
+| `setFlashMode()` | `Future<void>(FlashMode)` | Configure flash behavior |
+| `dispose()` | `void` | Cleanup resources |
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `state` | `GuidelineState` | Current operational state |
+| `stateStream` | `Stream<GuidelineState>` | State change notifications |
+| `flashMode` | `FlashMode` | Current flash setting |
+| `lensDirection` | `CameraLensDirection` | Active camera lens |
+| `cameraController` | `CameraController?` | Underlying camera controller |
+
+### GuidelineOverlayConfig
+```dart
+const GuidelineOverlayConfig({
+  GuidelineShape shape = GuidelineShape.roundedRect,
+  double? aspectRatio = 1.586,
+  double strokeWidth = 2.0,
+  double borderRadius = 12.0,
+  Color maskColor = Colors.black54,
+  Color frameColor = Colors.white,
+  double cornerLength = 20.0,
+  EdgeInsets padding = const EdgeInsets.all(20.0),
+  bool showGrid = false,
+  bool debugPaint = false,
+  List<ShapeConfig>? shapes, // Multi-shape mode
+})
+```
+
+### ShapeConfig
+```dart
+const ShapeConfig({
+  required GuidelineShape shape,
+  required Rect bounds,
+  double? aspectRatio,
+  double strokeWidth = 2.0,
+  double borderRadius = 12.0,
+  Color frameColor = Colors.white,
+  double cornerLength = 20.0,
+  bool showGrid = false,
+  List<ShapeConfig>? children,
+  ShapePositioning positioning = ShapePositioning.absolute,
+  Offset? relativeOffset,
+  EdgeInsets? insets,
+  Size? size,
+})
+```
+
+### Factory Constructors
+- `ShapeConfig.centered()` - Auto-centered child shape
+- `ShapeConfig.inset()` - Edge-positioned with margins
+- `ShapeConfig.relativePosition()` - Percentage-based positioning
+- `ShapeConfig.withValidation()` - Validated parameters
+
+### Enums
+- `GuidelineShape`: rect, roundedRect, circle, oval
+- `GuidelineState`: initializing, ready, capturing, error
+- `ShapePositioning`: absolute, relative, center, inset
+- `FlashMode`: off, always, auto, torch
+- `CameraLensDirection`: back, front
+
+### Results
+```dart
+class GuidelineCaptureResult {
+  final XFile file;           // Captured image file
+  final DateTime capturedAt;  // Capture timestamp
+  final CameraLensDirection lens; // Camera used
+}
+```
+
+## Usage Patterns
+
+### Basic Setup
+```dart
+class CapturePage extends StatefulWidget {
+  @override
+  _CapturePageState createState() => _CapturePageState();
+}
+
+class _CapturePageState extends State<CapturePage> {
+  late GuidelineCamController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = GuidelineCamController();
+    _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GuidelineCamBuilder(
+        controller: _controller,
+        guideline: GuidelineOverlayConfig(
+          shape: GuidelineShape.roundedRect,
+          aspectRatio: 1.586, // ID card ratio
+          frameColor: Colors.white,
+          maskColor: Colors.black54,
+        ),
+        onCapture: (result) {
+          // Handle captured image
+          print('Captured: ${result.file.path}');
+        },
+      ),
+    );
+  }
+}
+```
+
+### Multi-Shape Overlay
+```dart
+GuidelineCamBuilder(
+  controller: controller,
+  guideline: GuidelineOverlayConfig(
+    shapes: [
+      // Main document area
+      ShapeConfig(
+        shape: GuidelineShape.roundedRect,
+        bounds: Rect.fromLTWH(50, 100, 300, 200),
+        frameColor: Colors.white,
+      ),
+      // Signature area
+      ShapeConfig.inset(
+        shape: GuidelineShape.rect,
+        insets: EdgeInsets.only(bottom: 20, right: 20),
+        size: Size(0.3, 0.2), // 30% width, 20% height
+        frameColor: Colors.yellow,
+      ),
+    ],
+    maskColor: Colors.black54,
+  ),
+)
+```
+
+### Custom Buttons
+```dart
+GuidelineCamBuilder(
+  controller: controller,
+  guideline: GuidelineOverlayConfig(),
+  flashButtonBuilder: (context, flashMode, onPressed) {
+    return FloatingActionButton(
+      onPressed: onPressed,
+      backgroundColor: flashMode == FlashMode.off ? Colors.red : Colors.green,
+      child: Icon(flashMode == FlashMode.off ? Icons.flash_off : Icons.flash_on),
+    );
+  },
+  cameraSwitchButtonBuilder: (context, lensDirection, onPressed) {
+    return FloatingActionButton(
+      onPressed: onPressed,
+      child: Icon(lensDirection == CameraLensDirection.back 
+          ? Icons.camera_front : Icons.camera_rear),
+    );
+  },
+)
+```
+
+### Complete Overlay Control
+```dart
+GuidelineCamBuilder(
+  controller: controller,
+  guideline: GuidelineOverlayConfig(),
+  overlayBuilder: (context, controller) {
+    return Stack(
+      children: [
+        // Custom positioned elements
+        Positioned(
+          bottom: 50,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: FloatingActionButton.large(
+              onPressed: () async {
+                final result = await controller.capture();
+                // Handle result
+              },
+              child: Icon(Icons.camera_alt),
+            ),
+          ),
+        ),
+        // Custom status indicator
+        Positioned(
+          top: 50,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: Text('State: ${controller.state.name}'),
+          ),
+        ),
+      ],
+    );
+  },
+)
+```
+
+## Configuration Guide
+
+### Common Aspect Ratios
+- ID Cards: 1.586 (standard credit card)
+- Passports: 1.42 (ISO 7810 ID-3)
+- Driver's License: 1.586
+- Business Cards: 1.75
+- Passport Photos: 1.33 (4:3 ratio)
+
+### Shape Selection Guide
+- `rect`: Business documents, letters, certificates
+- `roundedRect`: ID cards, credit cards, modern documents
+- `circle`: Face capture, biometrics, profile pictures
+- `oval`: Passport photos, visa photos, official portraits
+
+### Positioning Examples
+```dart
+// Absolute positioning
+ShapeConfig(
+  shape: GuidelineShape.rect,
+  bounds: Rect.fromLTWH(100, 200, 150, 100),
+  positioning: ShapePositioning.absolute,
+)
+
+// Relative positioning (50% from left, 30% from top)
+ShapeConfig.relativePosition(
+  shape: GuidelineShape.circle,
+  relativeOffset: Offset(0.5, 0.3),
+  size: Size(0.2, 0.2), // 20% of parent
+)
+
+// Centered positioning
+ShapeConfig.centered(
+  shape: GuidelineShape.roundedRect,
+  size: Size(100, 100),
+)
+
+// Inset positioning (20px from bottom-right)
+ShapeConfig.inset(
+  shape: GuidelineShape.rect,
+  insets: EdgeInsets.only(bottom: 20, right: 20),
+  size: Size(0.3, 0.2),
+)
+```
+
+## Integration Notes
+
+### Permissions Required
+**Android** (`AndroidManifest.xml`):
+```xml
+<uses-permission android:name="android.permission.CAMERA" />
+```
+
+**iOS** (`Info.plist`):
+```xml
+<key>NSCameraUsageDescription</key>
+<string>We need access to the camera to capture your document/ID</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>We need access to the microphone to capture your document/ID</string>
+```
+
+### Dependencies
+```yaml
+dependencies:
+  guideline_cam: ^0.0.1
+```
+
+### Error Handling
+- Camera permission denied
+- No cameras available
+- Hardware failures
+- Initialization errors
+- Capture failures
+
+### Best Practices
+- Always initialize controller before use
+- Dispose controller in widget dispose
+- Handle error states gracefully
+- Use appropriate aspect ratios for document types
+- Test on both front and back cameras
+- Consider device-specific camera capabilities
+
+### Performance Considerations
+- Medium resolution preset used by default
+- Efficient path rendering for overlays
+- Minimal memory footprint
+- Optimized for mobile devices
+- Background processing for image capture
